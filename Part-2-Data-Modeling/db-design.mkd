@@ -1,0 +1,271 @@
+# Data Modeling - Pet Adoption Agency
+
+### ___Problem:___
+
+Pet adoption agency where you will **rescue and care** for animals and **try to find them owners who are a good match for them**
+
+### Requirements 
+
+* At least 4 tables
+* Include relationships between tables where they are needed
+
+<br>
+
+### Table Ideas:
+* Animals
+  * Type of animal
+  * name
+  * how they were recovered
+  * when they were recovered
+  * needs
+* People seeking pets
+  * name
+  * contact info
+  * preferences
+* Species
+  * types
+* Fowl
+  * food
+  * care
+* Mammal
+  * food 
+  * care
+* Reptile
+  * food
+  * care
+
+<br>
+
+## Table Design:
+
+### animals
+* `animal_id`
+* `animal_name`
+* `species_id`
+* `rescue_type_id`
+* rescue_date
+* `animal_needs`
+
+```sql
+CREATE TABLE animals (
+    animal_id SERIAL PRIMARY KEY,
+    animal_name VARCHAR(90),
+    species_id INT NOT NULL REFERENCES species(species_id),
+    rescue_type INT NOT NULL REFERENCES rescue(rescue_type),
+    rescue_date TIMESTAMP,
+    animal_needs VARCHAR(500)
+);
+```
+---
+<br>
+
+### rescue
+* `rescue_type_id`
+* rescue_type
+
+```sql
+CREATE TABLE rescue (
+    rescue_type_id SERIAL PRIMARY KEY,
+    rescue_type VARCHAR(50),
+);
+```
+---
+<br>
+
+### seekers
+* `seeker_id`
+* `seeker_name`
+* seeker_phone
+
+```sql
+CREATE TABLE seekers (
+    seeker_id SERIAL PRIMARY KEY,
+    seeker_name VARCHAR(90),
+    seeker_phone INT
+);
+```
+---
+<br>
+
+### seeker_preferences
+* `seeker_preferences_id`
+* `species_name`
+* seeker_name
+
+```sql
+CREATE TABLE seeker_preferences (
+    seeker_preferences_id SERIAL PRIMARY KEY,
+    species_name INT NOT NULL REFERENCES species(species_name),
+    seeker_name INT NOT NULL REFERENCES seekers(seeker_name)
+);
+```
+---
+<br>
+
+### species
+* `species_id`
+* `species_name`
+
+```sql
+CREATE TABLE species (
+    species_id SERIAL PRIMARY KEY,
+    species_name VARCHAR(90)
+);
+```
+---
+<br>
+
+### Fowl
+* fowl_id
+* `species_id`
+* fowl_name
+* fowl_food
+* fowl_care
+
+```sql
+CREATE TABLE fowl (
+    fowl_id SERIAL PRIMARY KEY,
+    species_id INT NOT NULL REFERENCES species(species_id),
+    fowl_name VARCHAR(60),
+    fowl_food VARCHAR(60),
+    fowl_care VARCHAR(60)
+);
+```
+---
+<br>
+
+### Mammal
+* mammal_id
+* `species_id`
+* mammal_name
+* mammal_food
+* mammal_care
+
+```sql
+CREATE TABLE mammal (
+    mammal_id SERIAL PRIMARY KEY,
+    species_id INT NOT NULL REFERENCES species(species_id),
+    mammal_name VARCHAR(60),
+    mammal_food VARCHAR(60),
+    mammal_care VARCHAR(60)
+);
+```
+---
+<br>
+
+### Reptile
+* reptile_id
+* `species_id`
+* reptile_name
+* reptile_food
+* reptile_care
+
+```sql
+CREATE TABLE reptile (
+    reptile_id SERIAL PRIMARY KEY,
+    species_id INT NOT NULL REFERENCES species(species_id),
+    reptile_name VARCHAR(60),
+    reptile_food VARCHAR(60),
+    reptile_care VARCHAR(60)
+);
+```
+---
+<br>
+
+### match
+* match_id
+* `animal_name`
+* `seeker_name`
+* `seeker_phone`
+* `animal_needs`
+* `seeker_preferences_id`
+
+```sql
+CREATE TABLE match (
+    match_id SERIAL PRIMARY KEY,
+    animal_name TEXT NOT NULL REFERENCES animal(animal_name),
+    animla_needs INT NOT NULL REFERENCES animal(animal_needs),
+    seeker_name TEXT NOT NULL REFERENCES seeker(seeker_name),
+    seeker_phone INT NOT NULL REFERENCES seeker(seeker_phone),
+    seeker_preferences_id INT NOT NULL REFERENCES seekers(seeker_preferences_id)
+);
+```
+<br>
+<br>
+
+
+---
+---
+---
+
+<br>
+<br>
+
+# Final SQL tables
+
+```sql
+CREATE TABLE animals (
+    animal_id SERIAL PRIMARY KEY,
+    animal_name VARCHAR(90),
+    species_id INT NOT NULL REFERENCES species(species_id),
+    rescue_type INT NOT NULL REFERENCES rescue(rescue_type),
+    rescue_date TIMESTAMP,
+    animal_needs VARCHAR(500)
+);
+
+CREATE TABLE rescue (
+    rescue_type_id SERIAL PRIMARY KEY,
+    rescue_type VARCHAR(50)
+);
+
+CREATE TABLE seekers (
+    seeker_id SERIAL PRIMARY KEY,
+    seeker_name VARCHAR(90),
+    seeker_phone INT
+);
+
+CREATE TABLE seeker_preferences (
+    seeker_preferences_id SERIAL PRIMARY KEY,
+    species_name INT NOT NULL REFERENCES species(species_name),
+    seeker_name INT NOT NULL REFERENCES seekers(seeker_name)
+);
+
+CREATE TABLE species (
+    species_id SERIAL PRIMARY KEY,
+    species_name VARCHAR(90)
+);
+
+CREATE TABLE fowl (
+    fowl_id SERIAL PRIMARY KEY,
+    species_id INT NOT NULL REFERENCES species(species_id),
+    fowl_name VARCHAR(60),
+    fowl_food VARCHAR(60),
+    fowl_care VARCHAR(60)
+);
+
+CREATE TABLE mammal (
+    mammal_id SERIAL PRIMARY KEY,
+    species_id INT NOT NULL REFERENCES species(species_id),
+    mammal_name VARCHAR(60),
+    mammal_food VARCHAR(60),
+    mammal_care VARCHAR(60)
+);
+
+CREATE TABLE reptile (
+    reptile_id SERIAL PRIMARY KEY,
+    species_id INT NOT NULL REFERENCES species(species_id),
+    reptile_name VARCHAR(60),
+    reptile_food VARCHAR(60),
+    reptile_care VARCHAR(60)
+);
+
+
+CREATE TABLE match (
+    match_id SERIAL PRIMARY KEY,
+    animal_name TEXT NOT NULL REFERENCES animals(animal_name),
+    animla_needs INT NOT NULL REFERENCES animals(animal_needs),
+    seeker_name TEXT NOT NULL REFERENCES seekers(seeker_name),
+    seeker_phone INT NOT NULL REFERENCES seekers(seeker_phone),
+    seeker_preferences_id INT NOT NULL REFERENCES seeker_preferences(seeker_preferences_id)
+);
+```
